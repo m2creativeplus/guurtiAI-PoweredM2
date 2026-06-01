@@ -26,11 +26,11 @@ export function SiteHeader() {
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Emblem_of_Somaliland.svg-KA2VMS1RBGBiZwHBJKbe1LbHH7N0oc.png"
-              alt="Emblem of the Republic of Somaliland"
+              src="/guurti-logo.png"
+              alt="Official Logo of the Republic of Somaliland Guurti"
               width={56}
               height={56}
-              className="h-14 w-14"
+              className="h-14 w-auto object-contain"
             />
             <div className="flex flex-col">
               <span className="text-base font-heading font-bold leading-tight">Golaha Guurtida</span>

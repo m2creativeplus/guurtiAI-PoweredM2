@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Copy, Check, Download, Wand2, Target, Coins, FileText, AlertCircle, ShieldAlert } from 'lucide-react';
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+
 
 interface Opportunity {
   id: string;
@@ -142,7 +141,6 @@ Golaha Guurtida, Republic of Somaliland`
 ];
 
 export default function DocumentGenerator() {
-  const dbOpportunities = useQuery(api.opportunities.list);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [selectedOpportunityId, setSelectedOpportunityId] = useState<string>('');
   const [selectedModelId, setSelectedModelId] = useState<string>('sierra-leone');
@@ -152,25 +150,32 @@ export default function DocumentGenerator() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (dbOpportunities !== undefined) {
-      if (dbOpportunities.length > 0) {
-        setOpportunities(dbOpportunities as any[]);
+    fetch('/api/grants')
+      .then(res => res.json())
+      .then(data => {
+        // Map the grants from the API to match the UI component's expected format
+        const mapped = (data.grants || []).map((g: any) => ({
+          id: g._id,
+          type: 'Grant',
+          title: g.title,
+          organization: g.org,
+          location: 'Horn of Africa',
+          deadline: g.deadline,
+          url: '#',
+          mahmoud_score: g.matchScore,
+          m2_score: g.matchScore,
+          overall_priority: g.status,
+          matched_keywords: g.focus,
+          value_usd: g.amount.includes('$') ? parseFloat(g.amount.replace(/[^0-9.]/g, '')) * 1000000 : undefined
+        }));
+        setOpportunities(mapped);
         setLoading(false);
-      } else {
-        // Fallback to static JSON file during static prerendering or when DB is empty
-        fetch('/data/latest.json')
-          .then(res => res.json())
-          .then(data => {
-            setOpportunities(data.for_mahmoud || []);
-            setLoading(false);
-          })
-          .catch(err => {
-            console.error('Error loading opportunities fallback:', err);
-            setLoading(false);
-          });
-      }
-    }
-  }, [dbOpportunities]);
+      })
+      .catch(err => {
+        console.error('Error loading opportunities from API:', err);
+        setLoading(false);
+      });
+  }, []);
 
 
   useEffect(() => {
