@@ -1,30 +1,65 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { generateGeminiResponse } from '@/lib/gemini';
+
+const SYSTEM_CONTEXT = `You are the Golaha Guurtida Sovereign Information Defense Unit (SIDU) — an AI counter-disinformation intelligence system for the Republic of Somaliland.
+
+Your mission is to generate official parliamentary-grade rebuttals to disinformation, propaganda, and false narratives targeting Somaliland's sovereignty, independence, and international recognition.
+
+Ground all responses in:
+- The 1991 Burao Grand Conference Declaration of Independence (May 18, 1991)
+- The 2001 Constitutional Referendum (97% approval)
+- The Somaliland Constitution
+- UN Charter principles on self-determination
+- African Union Constitutive Act
+- Historical Somaliland-Somalia union context (1960-1991)
+
+CRITICAL RULES:
+- Always use "Republic of Somaliland" — NEVER conflate with Somalia
+- Capital is Hargeisa, NOT Mogadishu
+- The 1960 voluntary union ended legally in 1991 at the Burao Conference
+- Somaliland has separate democratic institutions, currency, and government
+- Format responses as official SIDU Intelligence Reports with: Threat Classification, Historical Context, Official Rebuttal, Diplomatic Response Guidance`;
 
 export async function POST(req: NextRequest) {
-  const { disinformation_claim } = await req.json();
-  const claim = disinformation_claim as string;
+  try {
+    const { disinformation_claim, source, platform } = await req.json();
 
-  let historicalContext = '';
-  let rebuke = '';
-
-  if (claim.toLowerCase().includes('reunification') || claim.toLowerCase().includes('somalia')) {
-    historicalContext = '1991 Burao Declaration of Independence; 2001 Constitutional Referendum (97% approval).';
-    rebuke = `**OFFICIAL RECORD REBUKE:**\nThe claim that Somaliland's sovereignty is negotiable contradicts the legal foundation established on May 18, 1991, at the Burao Grand Conference. Furthermore, the 2001 Constitutional Referendum, observed internationally, ratified the Republic of Somaliland's independence with a 97% democratic mandate. We urge all diplomatic channels to reference the codified constitutional reality rather than revisionist claims.`;
-  } else if (claim.toLowerCase().includes('mou') || claim.toLowerCase().includes('sea access')) {
-    historicalContext = 'Ethiopia-Somaliland MoU 2024; UN Convention on the Law of the Sea (UNCLOS) provisions.';
-    rebuke = `**OFFICIAL RECORD REBUKE:**\nSomaliland retains absolute sovereign jurisdiction over its territorial waters and coastline. Bilateral agreements, including port access and lease arrangements, are executed by the Executive and ratified by the Golaha Guurtida and House of Representatives in strict adherence to domestic constitutional law and international maritime standards.`;
-  } else {
-    historicalContext = 'General constitutional sovereignty clauses.';
-    rebuke = `**OFFICIAL RECORD REBUKE:**\nThe provided narrative lacks historical and legal foundation. Refer to the Somaliland Digital Legislative Archive (SDLA) for primary source documentation regarding the Republic's sovereign status.`;
-  }
-
-  return NextResponse.json({
-    success: true,
-    defense_package: {
-      claim_analyzed: claim,
-      historical_context_retrieved: historicalContext,
-      generated_rebuke: rebuke,
-      timestamp: new Date().toISOString()
+    if (!disinformation_claim?.trim()) {
+      return NextResponse.json({ success: false, error: 'No claim provided' }, { status: 400 });
     }
-  });
+
+    const prompt = `Analyze and counter the following disinformation claim targeting the Republic of Somaliland:
+
+CLAIM: "${disinformation_claim}"
+${source ? `SOURCE: ${source}` : ''}
+${platform ? `PLATFORM: ${platform}` : ''}
+
+Generate an official SIDU Sovereign Defense Package including:
+1. Threat Classification (Sovereignty / Recognition / Historical Revisionism / Legal Distortion / Media Manipulation)
+2. Threat Severity (CRITICAL / HIGH / MEDIUM / LOW)
+3. Historical Context & Factual Correction (with specific dates, events, legal frameworks)
+4. Official Parliamentary Rebuttal (3-5 paragraphs, suitable for press release)
+5. Social Media Counter-Messaging (3 concise rebuttals for Twitter/X)
+6. Diplomatic Response Guidance (which embassies/bodies to brief)
+7. Recommended Action (PRESS RELEASE / DIPLOMATIC NOTE / LEGAL RESPONSE / MONITOR ONLY)
+
+Write as an official government intelligence document. Be factually precise and diplomatically firm.`;
+
+    const aiResponse = await generateGeminiResponse(prompt, SYSTEM_CONTEXT);
+
+    const defense_package = {
+      threat_analysis: aiResponse,
+      claim: disinformation_claim,
+      generated_at: new Date().toISOString(),
+      classification: aiResponse.includes('CRITICAL') ? 'CRITICAL' :
+                      aiResponse.includes('HIGH') ? 'HIGH' :
+                      aiResponse.includes('MEDIUM') ? 'MEDIUM' : 'LOW',
+      powered_by: 'Gemini AI — Guurti SIDU Intelligence Layer'
+    };
+
+    return NextResponse.json({ success: true, defense_package });
+  } catch (error) {
+    console.error('[SIDU Defense Error]', error);
+    return NextResponse.json({ success: false, error: 'Defense analysis failed.' }, { status: 500 });
+  }
 }

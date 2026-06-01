@@ -26,10 +26,42 @@ const cairo = Cairo({
 })
 
 export const metadata: Metadata = {
-  title: "Golaha Guurtida JSL | House of Elders of Somaliland",
+  title: {
+    default: "Golaha Guurtida | House of Elders — Republic of Somaliland",
+    template: "%s | Golaha Guurtida — Republic of Somaliland",
+  },
   description:
-    "Official website of the House of Elders of the Republic of Somaliland - Custodians of Peace and Continuity. Transparency is Sovereignty.",
-  generator: "v0.app",
+    "Official digital platform of the Golaha Guurtida (House of Elders), the upper legislative chamber of the Republic of Somaliland. Established 1991 | Hargeisa, Somaliland.",
+  keywords: [
+    "Golaha Guurtida",
+    "House of Elders Somaliland",
+    "Republic of Somaliland Parliament",
+    "Somaliland Legislature",
+    "Somaliland Democracy",
+    "Guurti",
+    "Somaliland Government",
+    "Hargeisa",
+    "External Partnerships Department EPD",
+  ],
+  authors: [{ name: "Golaha Guurtida — External Partnerships Department" }],
+  creator: "Golaha Guurtida, Republic of Somaliland",
+  publisher: "Golaha Guurtida, Republic of Somaliland",
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    locale: "en_GB",
+    url: "https://guurtiai-powered-m2.vercel.app",
+    siteName: "Golaha Guurtida — House of Elders, Republic of Somaliland",
+    title: "Golaha Guurtida | House of Elders — Republic of Somaliland",
+    description:
+      "The Golaha Guurtida is the upper legislative chamber of the Republic of Somaliland, established in 1991. This platform supports the External Partnerships Department (EPD) mandate.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Golaha Guurtida | House of Elders — Republic of Somaliland",
+    description: "Official EPD Intelligence & Parliamentary Governance Platform of the Golaha Guurtida.",
+  },
+  metadataBase: new URL("https://guurtiai-powered-m2.vercel.app"),
 }
 
 export default function RootLayout({

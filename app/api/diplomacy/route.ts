@@ -1,22 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { generateGeminiResponse } from '@/lib/gemini';
+
+const SYSTEM_CONTEXT = `You are the Golaha Guurtida Parliamentary Diplomacy AI — a specialist in drafting official parliamentary diplomatic communications for the Republic of Somaliland.
+
+You draft communications on behalf of the:
+- Office of the Speaker, Golaha Guurtida (House of Elders)
+- Committee on Foreign Affairs & International Cooperation
+- Parliamentary Friendship Groups Unit (PGEU)
+
+All documents must:
+- Use formal parliamentary diplomatic language
+- Reference "Republic of Somaliland" — never "Somalia/Somaliland"
+- Reflect Somaliland's democratic legitimacy and institutional track record
+- Position the Guurti as an upper chamber with 82 traditional elders and modern governance roles
+- Be ready for immediate dispatch to target parliamentary bodies
+
+Document types supported:
+- Expression of Interest (EOI) letters
+- Memoranda of Understanding (MoU) draft frameworks
+- Diplomatic Note Verbale
+- Friendship Group Establishment Letters
+- Invitation Letters for official visits
+- Joint Statement frameworks`;
 
 export async function POST(req: NextRequest) {
-  const { target_parliament, document_type, key_points } = await req.json();
+  try {
+    const { target_parliament, target_country, document_type, key_points, context } = await req.json();
 
-  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  let draft = '';
+    const prompt = `Draft an official ${document_type || 'diplomatic communication'} from the Golaha Guurtida (House of Elders) of the Republic of Somaliland to the ${target_parliament || 'target parliamentary body'} of ${target_country || 'the target nation'}.
 
-  if (document_type === 'Icebreaker Letter' && target_parliament === 'Knesset') {
-    draft = `Date: ${today}\n\nTo the Honorable Members of the Knesset,\n\nOn behalf of the Golaha Guurtida (House of Elders) of the Republic of Somaliland, we extend our highest diplomatic regards.\n\nFollowing the historic diplomatic engagements of December 2025, we write to formalize a Strategic Friendship Group between our respective legislative bodies. Our shared commitment to democratic resilience, regional stability, and technological innovation forms a strong foundation for bilateral cooperation.\n\nKey areas of proposed collaboration include:\n${key_points.map((p: string) => `- ${p}`).join('\n')}\n\nWe look forward to a direct parliament-to-parliament exchange.\n\nSincerely,\nOffice of the Chairman\nGolaha Guurtida (House of Elders)\nRepublic of Somaliland`;
-  } else if (document_type === 'MoU') {
-    draft = `MEMORANDUM OF UNDERSTANDING\n\nBetween the Golaha Guurtida (Republic of Somaliland) and the ${target_parliament}\n\nArticle 1: Purpose\nThis MoU establishes a formal Strategic Friendship Group...\n\nArticle 2: Areas of Cooperation\n${key_points.map((p: string, i: number) => `2.${i + 1} ${p}`).join('\n')}\n\nSigned on this day, ${today}.`;
-  } else {
-    draft = `Standard diplomatic template generated for ${target_parliament} regarding: ${key_points.join(', ')}.`;
+${key_points?.length ? `Key points to include:\n${key_points.map((p: string, i: number) => `${i+1}. ${p}`).join('\n')}` : ''}
+${context ? `Additional context: ${context}` : ''}
+
+Requirements:
+- Use proper diplomatic salutation and closing
+- Include today's date: ${new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
+- Reference specific areas of proposed cooperation
+- Highlight Somaliland's democratic stability and parliamentary track record
+- Include appropriate reference numbers and classifications
+- Make it immediately usable — no placeholders
+
+Draft a complete, professional diplomatic document ready for dispatch.`;
+
+    const aiResponse = await generateGeminiResponse(prompt, SYSTEM_CONTEXT);
+
+    return NextResponse.json({
+      success: true,
+      draft_content: aiResponse,
+      metadata: {
+        target: target_parliament,
+        document_type,
+        generated_at: new Date().toISOString(),
+        powered_by: 'Gemini AI — Guurti Parliamentary Diplomacy Unit'
+      }
+    });
+  } catch (error) {
+    console.error('[Diplomacy Draft Error]', error);
+    return NextResponse.json({ success: false, error: 'Document generation failed.' }, { status: 500 });
   }
-
-  return NextResponse.json({
-    success: true,
-    draft_content: draft,
-    metadata: { target: target_parliament, generated_at: new Date().toISOString() }
-  });
 }

@@ -1,154 +1,218 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, Scale, UploadCloud, AlertTriangle, CheckCircle, FileSearch, Loader2, ShieldAlert } from 'lucide-react';
-import { useState } from 'react';
+import {
+  Scale, Target, Shield, Globe, BookOpen, Cpu, Brain,
+  ArrowRight, TrendingUp, FileText, Users, Zap
+} from 'lucide-react';
 
-export default function ScrutinyDashboard() {
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<any>(null);
+export const metadata: Metadata = {
+  title: 'External Partnerships Department (EPD)',
+  description: 'The Golaha Guurtida External Partnerships Department — AI-powered intelligence platform for grant acquisition, parliamentary diplomacy, and sovereignty defense for the Republic of Somaliland.',
+};
 
-  const handleSimulateUpload = async () => {
-    setIsAnalyzing(true);
-    setAnalysisResult(null);
-    
-    // Simulate parsing delay
-    setTimeout(async () => {
-      try {
-        const response = await fetch('/api/scrutiny', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            agreement_title: "Berbera Corridor Logistics Expansion Agreement",
-            investment_value: "$15.4M",
-            investor_origin: "Foreign"
-          })
-        });
-        const res = await response.json();
-        setAnalysisResult(res.analysis);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsAnalyzing(false);
-      }
-    }, 2000);
-  };
+const EPD_MODULES = [
+  {
+    href: '/epd/grant-intelligence',
+    icon: Target,
+    title: 'Grant Intelligence',
+    subtitle: 'PGEU — Parliamentary Grant Engagement Unit',
+    description: 'Live database of verified donor opportunities. AI-scored match analysis against Guurti mandate. 8 active grants totalling $14.6M+.',
+    badge: 'LIVE DATA',
+    badgeColor: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20',
+    accentColor: 'border-emerald-500/30 hover:border-emerald-500/50',
+  },
+  {
+    href: '/epd/proposal-generator',
+    icon: FileText,
+    title: 'Proposal Generator',
+    subtitle: 'AI-Powered EOI & Concept Note Drafting',
+    description: 'Generate professional grant proposals, Expressions of Interest, and Concept Notes aligned to the Guurti mandate. Three strategic positioning models.',
+    badge: 'AI GEMINI',
+    badgeColor: 'bg-blue-500/15 text-blue-400 border-blue-500/20',
+    accentColor: 'border-blue-500/30 hover:border-blue-500/50',
+  },
+  {
+    href: '/epd/sovereignty-defense',
+    icon: Shield,
+    title: 'Sovereignty Defense Unit',
+    subtitle: 'SIDU — Counter-Disinformation Intelligence',
+    description: 'AI-powered counter-disinformation engine. Generate official parliamentary rebuttals to false narratives targeting Somaliland\'s independence and recognition.',
+    badge: 'AI GEMINI',
+    badgeColor: 'bg-red-500/15 text-red-400 border-red-500/20',
+    accentColor: 'border-red-500/30 hover:border-red-500/50',
+  },
+  {
+    href: '/epd/treaty-scrutiny',
+    icon: Scale,
+    title: 'Treaty & Investment Scrutiny',
+    subtitle: 'AI-POS — Parliamentary Oversight System',
+    description: 'Ex-ante constitutional compliance analysis for foreign treaties, bilateral agreements, and investment portfolios. Powered by Somaliland constitutional law database.',
+    badge: 'AI GEMINI',
+    badgeColor: 'bg-amber-500/15 text-amber-400 border-amber-500/20',
+    accentColor: 'border-amber-500/30 hover:border-amber-500/50',
+  },
+  {
+    href: '/epd/parliamentary-diplomacy',
+    icon: Globe,
+    title: 'Parliamentary Diplomacy',
+    subtitle: 'Friendship Groups & Bilateral Relations',
+    description: 'Draft official diplomatic communications, MoUs, and friendship group establishment letters for parliament-to-parliament engagement. Target 40 parliaments.',
+    badge: 'AI GEMINI',
+    badgeColor: 'bg-purple-500/15 text-purple-400 border-purple-500/20',
+    accentColor: 'border-purple-500/30 hover:border-purple-500/50',
+  },
+  {
+    href: '/epd/strategic-intelligence',
+    icon: Brain,
+    title: 'Strategic Intelligence',
+    subtitle: 'Geopolitical & Donor Briefings',
+    description: 'AI-generated intelligence briefings on international recognition opportunities, donor community sentiment, and geopolitical developments affecting Somaliland.',
+    badge: 'AI GEMINI',
+    badgeColor: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/20',
+    accentColor: 'border-cyan-500/30 hover:border-cyan-500/50',
+  },
+  {
+    href: '/epd/sovereign-workspace',
+    icon: Cpu,
+    title: 'Sovereign Workspace',
+    subtitle: 'NotebookLM & Research Intelligence',
+    description: 'Integrated knowledge workspace with 14 source documents including the Somaliland Constitution, IPU guides, and traditional peace agreements.',
+    badge: 'CONNECTED',
+    badgeColor: 'bg-zinc-500/15 text-zinc-400 border-zinc-500/20',
+    accentColor: 'border-zinc-500/30 hover:border-zinc-500/50',
+  },
+  {
+    href: '/epd/capacity-development',
+    icon: BookOpen,
+    title: 'Capacity Development',
+    subtitle: 'Parliamentary Academy & Training',
+    description: 'Structured learning tracks for Guurti staff on parliamentary procedures, international relations, grant writing, and digital governance.',
+    badge: 'ACADEMY',
+    badgeColor: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/20',
+    accentColor: 'border-indigo-500/30 hover:border-indigo-500/50',
+  },
+];
 
+const STATS = [
+  { value: '$14.6M+', label: 'Active grant opportunities', icon: TrendingUp },
+  { value: '8', label: 'Verified donor programmes', icon: Target },
+  { value: '40', label: 'Target parliamentary partners', icon: Users },
+  { value: '5', label: 'AI-powered tools', icon: Zap },
+];
+
+export default function EPDHubPage() {
   return (
-    <div className="min-h-screen bg-[#050507] text-[#F0EEE8] font-body p-8 selection:bg-mora-green-500/30">
+    <div className="min-h-screen bg-[#050507] text-[#F0EEE8]">
       {/* Header */}
-      <header className="mb-12 border-b border-mora-green-900/45 pb-8 flex items-center gap-6">
-        <Link href="/epd" className="p-2.5 bg-zinc-900/60 border border-white/5 hover:border-mora-green-500/40 rounded-xl transition-all">
-          <ArrowLeft className="w-5 h-5 text-mora-green-400" />
-        </Link>
-        <div>
-          <h1 className="text-3xl font-header font-bold text-white tracking-widest uppercase flex items-center gap-3">
-            AI-POS <span className="text-sl-gold-400">•</span> Compliance Checker
-          </h1>
-          <p className="text-[#9B9AAD] text-sm mt-1 flex items-center gap-2">
-            <Scale className="w-4 h-4 text-sl-gold-400" />
-            Ex-Ante Scrutiny Gatekeeper · Foreign Treaty & Investment Oversight
-          </p>
+      <header className="border-b border-[#008A51]/20 bg-[#050507]/95 backdrop-blur-xl sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="p-2 hover:bg-white/5 rounded-lg transition-all text-zinc-500 hover:text-zinc-300"
+              aria-label="Return to homepage"
+            >
+              <ArrowRight className="w-4 h-4 rotate-180" />
+            </Link>
+            <div>
+              <div className="text-[10px] font-mono text-[#008A51] tracking-[0.3em] uppercase mb-0.5">
+                Golaha Guurtida — Republic of Somaliland
+              </div>
+              <h1 className="text-lg font-bold text-white tracking-tight">
+                External Partnerships Department
+              </h1>
+            </div>
+          </div>
+          <div className="hidden md:flex items-center gap-2 text-xs text-zinc-500">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            EPD Intelligence Platform — Active
+          </div>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* Left: Upload Interface */}
-        <div className="bg-zinc-900/50 border border-white/5 hover:border-mora-green-500/30 p-8 rounded-2xl flex flex-col items-center justify-center min-h-[400px] transition-all group">
-          <div className="w-20 h-20 bg-mora-green-500/10 rounded-full flex items-center justify-center mb-6 border border-mora-green-500/20 group-hover:border-mora-green-500/50 group-hover:scale-105 transition-all">
-            <UploadCloud className="w-10 h-10 text-mora-green-400" />
-          </div>
-          <h2 className="text-xl font-header font-bold mb-2 text-center text-white">Upload Strategic Agreement</h2>
-          <p className="text-[#9B9AAD] text-sm text-center mb-8 max-w-sm">
-            Securely upload treaty drafts, international bilateral agreements, or procurement portfolios (PDF/DOCX) for immediate ex-ante sovereignty checks.
-          </p>
-          <div className="flex gap-4 w-full max-w-md">
-            <button 
-              onClick={handleSimulateUpload}
-              disabled={isAnalyzing}
-              className="flex-1 bg-sl-gold-400 hover:bg-sl-gold-500 text-[#050507] py-4 rounded-xl font-bold flex justify-center items-center gap-2.5 transition-all active:scale-95 disabled:opacity-30"
-            >
-              {isAnalyzing ? (
-                <><Loader2 className="w-5 h-5 animate-spin" /> Performing Ex-Ante Checks...</>
-              ) : (
-                <><FileSearch className="w-5 h-5" /> Analyze Example Portfolio ($15.4M)</>
-              )}
-            </button>
-          </div>
-        </div>
+      <main className="max-w-7xl mx-auto px-6 lg:px-10 py-16">
 
-        {/* Right: Analysis Results */}
-        <div className={`bg-zinc-900/50 border p-8 rounded-2xl transition-all duration-500 min-h-[400px] ${
-          analysisResult 
-            ? (analysisResult.risk_level === 'High' 
-                ? 'border-rose-500/40 shadow-[0_0_25px_rgba(244,63,94,0.06)] bg-rose-950/5' 
-                : 'border-mora-green-500/40 shadow-[0_0_25px_rgba(56,142,60,0.06)] bg-mora-green-950/5') 
-            : 'border-white/5'
-        }`}>
-          <h2 className="text-xl font-header font-bold mb-6 flex items-center gap-3 text-white">
-            <span className="w-1.5 h-6 rounded-full bg-sl-gold-400" />
-            AI-POS Sovereignty Risk Assessment
+        {/* Hero */}
+        <section aria-labelledby="epd-heading" className="mb-16">
+          <div className="inline-flex items-center gap-2 bg-[#008A51]/10 border border-[#008A51]/20 text-[#008A51] text-xs font-mono tracking-widest uppercase px-3 py-1.5 rounded-full mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#008A51] animate-pulse" />
+            EPD / External Partnerships Department
+          </div>
+          <h2 id="epd-heading" className="text-4xl lg:text-5xl font-bold text-white leading-tight max-w-4xl mb-6">
+            AI-Powered Parliamentary<br />
+            <span className="text-[#008A51]">Diplomacy & Intelligence</span>
           </h2>
-          
-          {!analysisResult && !isAnalyzing && (
-            <div className="h-64 flex flex-col items-center justify-center text-[#5A5870] pb-12 gap-3">
-              <ShieldAlert className="w-16 h-16 mb-2 opacity-25 text-mora-green-400" />
-              <p className="font-sans text-sm">Awaiting document ingest...</p>
-            </div>
-          )}
+          <p className="text-lg text-zinc-400 max-w-3xl leading-relaxed mb-8">
+            The Golaha Guurtida EPD platform consolidates grant intelligence, diplomatic communications, 
+            sovereignty defense, and strategic analytics into a single operational system. 
+            Designed for the Foreign Affairs & International Cooperation Committee.
+          </p>
 
-          {isAnalyzing && (
-            <div className="h-64 flex flex-col items-center justify-center text-sl-gold-400 pb-12 gap-4">
-              <div className="w-12 h-12 border-4 border-sl-gold-400 border-t-transparent rounded-full animate-spin"></div>
-              <p className="animate-pulse font-mono text-xs tracking-wider uppercase">Cross-referencing Somaliland Constitution (Articles 61 & 12)...</p>
-            </div>
-          )}
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl">
+            {STATS.map((stat) => (
+              <div
+                key={stat.label}
+                className="bg-zinc-900/60 border border-white/5 rounded-2xl p-5 flex flex-col gap-1"
+              >
+                <stat.icon className="w-4 h-4 text-[#008A51] mb-1" />
+                <div className="text-2xl font-bold text-white">{stat.value}</div>
+                <div className="text-xs text-zinc-500 leading-tight">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-          {analysisResult && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="flex items-center justify-between bg-zinc-950 p-4 rounded-xl border border-white/5">
-                <span className="text-[#9B9AAD] text-sm font-bold uppercase tracking-wider">Overall Risk Score</span>
-                <div className={`flex items-center gap-2 font-bold text-xs px-3.5 py-1.5 rounded-full border ${
-                  analysisResult.risk_level === 'High' 
-                    ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' 
-                    : 'bg-mora-green-500/10 border-mora-green-500/20 text-mora-green-400'
-                }`}>
-                  {analysisResult.risk_level === 'High' ? <AlertTriangle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
-                  {analysisResult.risk_level.toUpperCase()} RISK
+        {/* Module Grid */}
+        <section aria-labelledby="modules-heading">
+          <h2 id="modules-heading" className="sr-only">EPD Operational Modules</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {EPD_MODULES.map((mod) => (
+              <Link
+                key={mod.href}
+                href={mod.href}
+                className={`group bg-zinc-900/40 border ${mod.accentColor} rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200 hover:bg-zinc-900/70 hover:-translate-y-0.5`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <mod.icon className="w-5 h-5 text-zinc-300" />
+                  </div>
+                  <span className={`text-[10px] font-mono font-bold px-2 py-1 rounded-full border ${mod.badgeColor}`}>
+                    {mod.badge}
+                  </span>
                 </div>
-              </div>
-
-              <div>
-                <h4 className="text-xs font-bold text-[#5A5870] mb-2 uppercase tracking-wider">Executive Summary</h4>
-                <p className="text-[#F0EEE8] text-sm leading-relaxed bg-zinc-950/60 border border-white/5 p-4 rounded-xl">
-                  {analysisResult.summary}
-                </p>
-              </div>
-
-              <div>
-                <h4 className="text-xs font-bold text-rose-400 mb-3 uppercase tracking-wider flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4" /> Flagged Constitutional Concerns
-                </h4>
-                <ul className="space-y-3">
-                  {analysisResult.flagged_clauses.map((clause: string, idx: number) => (
-                    <li key={idx} className="flex gap-3 text-[#F0EEE8] text-sm bg-rose-500/5 p-4 rounded-xl border border-rose-500/10 font-sans leading-relaxed">
-                      <div className="w-2 h-2 mt-1.5 rounded-full bg-rose-500 shrink-0"></div>
-                      {clause}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="pt-6 border-t border-white/5 mt-8">
-                <div className="bg-sl-gold-400/5 border border-sl-gold-400/20 text-sl-gold-400 p-4 rounded-xl text-sm font-bold flex items-center justify-between gap-4">
-                  <span className="uppercase tracking-wider text-xs">Action Directive:</span>
-                  <span className="text-[#F0EEE8] font-mono text-xs text-right bg-zinc-950 border border-white/5 px-3 py-1.5 rounded-lg">{analysisResult.recommendation}</span>
+                <div>
+                  <h3 className="font-bold text-white mb-1 group-hover:text-[#008A51] transition-colors">
+                    {mod.title}
+                  </h3>
+                  <p className="text-[11px] text-zinc-500 font-mono mb-3 leading-tight">
+                    {mod.subtitle}
+                  </p>
+                  <p className="text-sm text-zinc-400 leading-relaxed">
+                    {mod.description}
+                  </p>
                 </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+                <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
+                  <span className="text-xs text-zinc-600 group-hover:text-[#008A51] transition-colors">
+                    Open module
+                  </span>
+                  <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-[#008A51] group-hover:translate-x-1 transition-all" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer note */}
+        <footer className="mt-20 pt-8 border-t border-white/5 text-center">
+          <p className="text-xs text-zinc-600">
+            Golaha Guurtida — External Partnerships Department (EPD) · Republic of Somaliland · Hargeisa
+          </p>
+          <p className="text-xs text-zinc-700 mt-1">
+            AI features powered by Google Gemini. All outputs require human review before official use.
+          </p>
+        </footer>
+      </main>
     </div>
   );
 }
