@@ -63,6 +63,6 @@
 
 > [!TIP]
 > **Actionable Takeaways for the Guurti Digital Strategy:**
-> 1. **Establish a Dedicated `.gov.sl` Subdomain:** Following the US and Australian models, the Guurti Foreign Affairs Committee needs a distinct digital portal (e.g., `fac.guurti.gov.sl`).
+> 1. **Establish a Dedicated Sub-Portal:** Following the US and Australian models, the Guurti Foreign Affairs Committee needs a distinct digital portal hosted directly on the official infrastructure: `https://guurtigovsomaliland.org/`.
 > 2. **Professionalize Socials:** Shift focus from Facebook/X to LinkedIn (the UK model) for serious diplomatic networking.
 > 3. **Implement Push Notifications:** Adopt the Canadian eNewsletter system to bypass algorithms and reach diplomatic inboxes directly.

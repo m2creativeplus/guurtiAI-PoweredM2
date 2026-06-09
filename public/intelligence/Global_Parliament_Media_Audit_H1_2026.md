@@ -16,7 +16,7 @@
     *   **January:** Focused entirely on U.S. Policy towards Venezuela (Hearing with Sec. State Marco Rubio on Jan 28).
     *   **March:** Sanctions deployment (March 27 release pushing the administration on Milorad Dodik).
     *   **May/June:** Geopolitical competitiveness. Introducing legislation for tech dominance (May 19) and issuing joint statements on global democratic anniversaries (June 4 Tiananmen statement).
-*   **The Guurti Takeaway:** Stop trying to "go viral." The Guurti must establish a formal "Press Room" on its `.gov.sl` domain and publish highly formal, structured press releases 2-3 times a week addressing Horn of Africa security.
+*   **The Guurti Takeaway:** Stop trying to "go viral." The Guurti must establish a formal "Press Room" directly on the official `guurtigovsomaliland.org` domain and publish highly formal, structured press releases 2-3 times a week addressing Horn of Africa security.
 
 ## 2. United Kingdom: Lords International Relations and Defence Committee
 **H1 2026 Ranking:** #2 (Highest B2B Diplomatic Engagement)
@@ -54,7 +54,7 @@
 > [!TIP]
 > **The Ultimate Digital Protocol for the Guurti (Q3/Q4 2026)**
 > Based on this 6-month global audit, the Guurti must immediately deploy the following stack:
-> 1. **The US Press Room:** Build `fac.guurti.gov.sl/press` for formal statements.
+> 1. **The US Press Room:** Build `guurtigovsomaliland.org/press` for formal statements.
 > 2. **The UK LinkedIn:** Establish a committee LinkedIn to solicit expert testimony.
 > 3. **The Canadian Alert System:** Push email notifications to Nairobi embassies.
 > 4. **The Australian Archive:** Upload all hearing transcripts in English.
